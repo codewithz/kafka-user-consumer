@@ -21,14 +21,17 @@ public class Main {
         SuggestionEngine suggestionEngine = new SuggestionEngine();
         
         Properties props=new Properties();
-    	props.put("bootstrap.servers","localhost:9092,localhost:9093");
-    	props.put("group.id","user-tracking-consumer");
-    	props.put("key.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
-    	props.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
+    	props.put("bootstrap.servers","localhost:9092");
+    	 props.put("group.id", "user-tracking-consumer");
+         props.put("key.deserializer", "io.confluent.kafka.serializers.KafkaAvroDeserializer");
+         props.put("value.deserializer", "io.confluent.kafka.serializers.KafkaAvroDeserializer");
+         props.put("specific.avro.reader", "true");
+         props.put("schema.registry.url", "http://localhost:8081");
+
     	
     	Consumer<String, String> consumer=new KafkaConsumer<>(props);
     	
-    	consumer.subscribe(Arrays.asList("user-tracking"));
+    	consumer.subscribe(Arrays.asList("user-tracking-avro"));
     	
     	while(true) {
 	    	ConsumerRecords<String, String> records=consumer.poll(Duration.ofMillis(100));
